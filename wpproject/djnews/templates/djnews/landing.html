@@ -1,0 +1,7 @@
+<!--djnews/templates/djnews/landing.html-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+Hello, {{ user.username|default:'Guest' }}! This is your landing page.
+{% endblock %}
