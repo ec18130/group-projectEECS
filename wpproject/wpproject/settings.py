@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = '/djnews/profile'
+# Django user settings
+LOGIN_REDIRECT_URL = '/profile'
+LOGOUT_REDIRECT_URL = "/landing"
 
 # Application definition
 
