@@ -118,6 +118,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# email config
-EMAIL_HOST = "localhost"
-EMAIL_PORT = 1025
+# email config for testing
+# EMAIL_HOST = "localhost"
+# EMAIL_PORT = 1025
+
+# GMAIL config
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "ecs639uprojectsuperuser@gmail.com"
+EMAIL_HOST_PASSWORD = "SuperPass1"
+EMAIL_USE_TLS = True
