@@ -29,18 +29,18 @@ ALLOWED_HOSTS = []
 
 # Django user settings
 LOGIN_REDIRECT_URL = '/profile'
-LOGOUT_REDIRECT_URL = "/landing"
+LOGOUT_REDIRECT_URL = "/"
 
 # Application definition
 
 INSTALLED_APPS = [
+    'djnews',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djnews',
 ]
 
 MIDDLEWARE = [
