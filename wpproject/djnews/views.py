@@ -1,3 +1,8 @@
-from django.shortcuts import render
+# djnews/views.py
 
-# Create your views here.
+from django.shortcuts import render
+from django.views.generic import TemplateView
+
+
+class ProfileView(TemplateView):
+    template_name = "djnews/profile.html"
