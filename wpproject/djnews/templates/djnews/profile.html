@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Hello, {{ user.username|default:'Guest' }}! This is your profile page.
+    <p>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</p>
+    <p>DOB: {{ profile.dob }}</p>
 {% endblock %}

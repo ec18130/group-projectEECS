@@ -6,12 +6,18 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import TemplateView
-
 from djnews.forms import CustomUserCreationForm
+from djnews.models import Profile
 
 
-class ProfileView(TemplateView):
+class ProfileView(View):
     template_name = "djnews/profile.html"
+
+    @staticmethod
+    def get(request):
+        p = Profile.objects.get(user=request.user)
+        context = {'user': request.user, 'profile': p}
+        return render(request, "djnews/profile.html", context=context)
 
 
 class LandingView(TemplateView):
@@ -19,14 +25,16 @@ class LandingView(TemplateView):
 
 
 class RegisterView(View):
-    def get(self, request):
+    @staticmethod
+    def get(request):
         return render(
             request, "djnews/register.html",
             {"form": CustomUserCreationForm}
         )
 
     # TODO: prevent users with the same email
-    def post(self, request):
+    @staticmethod
+    def post(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
