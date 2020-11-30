@@ -8,7 +8,7 @@ from django.db import models
 # Picture
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    dob = models.DateField()
+    dob = models.DateField(default="1000-01-01")
     # image = models.ImageField(upload_to='images')
 
     def __str__(self):
