@@ -8,6 +8,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from djnews.forms import CustomUserCreationForm
+from .models import NewsArticle, NewsCategory
 
 
 class ProfileView(TemplateView):
@@ -45,3 +46,21 @@ class RegisterView(View):
                 return redirect(reverse("landing"))
         else:
             return render(request, 'djnews/register.html', {'form': form})
+
+
+def is_valid_queryparam(param): 
+    return param != '' and param is not None
+            
+def index(request):
+    queryset = NewsArticle.objects.all()
+    categories = NewsCategory.objects.all()
+    category = request.GET.get('category')
+        
+    if is_valid_queryparam(category) and category != 'All':
+        queryset = queryset.filter(category__name=category)
+
+    context={
+        "test": queryset,
+        "test2": categories,
+    }
+    return render(request, "djnews/landing.html", context)
