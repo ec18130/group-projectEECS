@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from djnews.forms import CustomUserCreationForm, ProfileForm
-from djnews.models import Profile
+from djnews.models import Profile, NewsArticle, NewsCategory
 
 
 class ProfileView(View):
@@ -75,3 +75,21 @@ class GetProfileDetails(View):
     def get(request):
         form = ProfileForm()
         return render(request, 'djnews/profile_form.html', {'form': form})
+
+
+def is_valid_queryparam(param): 
+    return param != '' and param is not None
+            
+def index(request):
+    queryset = NewsArticle.objects.all()
+    categories = NewsCategory.objects.all()
+    category = request.GET.get('category')
+        
+    if is_valid_queryparam(category) and category != 'All':
+        queryset = queryset.filter(category__name=category)
+
+    context={
+        "test": queryset,
+        "test2": categories,
+    }
+    return render(request, "djnews/landing.html", context)
