@@ -125,3 +125,7 @@ dmypy.json
 #IDEs
 .idea
 .vscode
+
+#DB stuff
+db.sqlite3
+0001_initial.py
