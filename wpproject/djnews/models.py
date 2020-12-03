@@ -37,18 +37,22 @@ class Profile(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE())
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField(max_length=350)
-    dateCreated = models.DateField().auto_now_add
-    dateUpdated = models.DateField().auto_now
-    article = models.ForeignKey(NewsArticle, on_delete=models.CASCADE())
-    parent = models.ForeignKey('self', on_delete=models.CASCADE())
+    dateCreated = models.DateTimeField(auto_now_add=True)
+    dateUpdated = models.DateTimeField(auto_now=True)
+    article = models.ForeignKey(NewsArticle, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        string = 'author: ' + str(self.author) + '\n'
+        string = 'id: ' + str(self.id) + '\n'
+        string += 'author: ' + str(self.author) + '\n'
         string += 'dateCreated: ' + str(self.dateCreated) + '\n'
         string += 'dateUpdated: ' + str(self.dateUpdated) + '\n'
         string += 'text: ' + str(self.text) + '\n'
-        string += 'parent: ' + str(self.parent) + '\n'
+        if self.parent is None:
+            string += 'parent: None'
+        else:
+            string += 'parent: ' + str(self.parent.id) + '\n'
         return string
