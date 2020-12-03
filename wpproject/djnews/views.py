@@ -19,7 +19,7 @@ class ProfileView(View):
     def get(request):
         p = Profile.objects.get(user=request.user)
         if date(1000, 1, 1) == p.dob:
-            p.dob=None
+            p.dob = None
         context = {'user': request.user, 'profile': p}
         return render(request, "djnews/profile.html", context=context)
 
@@ -77,19 +77,20 @@ class GetProfileDetails(View):
         return render(request, 'djnews/profile_form.html', {'form': form})
 
 
-def is_valid_queryparam(param): 
+def is_valid_queryparam(param):
     return param != '' and param is not None
-            
+
+
 def index(request):
     queryset = NewsArticle.objects.all()
     categories = NewsCategory.objects.all()
     category = request.GET.get('category')
-        
+
     if is_valid_queryparam(category) and category != 'All':
         queryset = queryset.filter(category__name=category)
 
-    context={
-        "test": queryset,
-        "test2": categories,
+    context = {
+        "articles": queryset,
+        "categories": categories,
     }
     return render(request, "djnews/landing.html", context)

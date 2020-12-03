@@ -7,14 +7,14 @@ Hello, {{ user.username|default:'Guest' }}! This is your landing page.
 <form action="" method="GET">
     <select id="category" name="category">
         <option value="All">All</option>
-        {% for instance in test2 %}
+        {% for instance in categories %}
         <option value="{{ instance }}">{{ instance }}</option>
         {% endfor %}
         <input type="submit" value="Filter by">
     </select>
 </form>
 
-{% for instance in test %}
+{% for instance in articles %}
 <ul>
     <h3>{{ instance.title }}</h3>
     <p>{{ instance.category }}</p>
