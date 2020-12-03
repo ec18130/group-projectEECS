@@ -5,7 +5,9 @@ from djnews.views import *
 
 urlpatterns = [
     path('accounts/', include("django.contrib.auth.urls")),
+    path('profile/details/', login_required(GetProfileDetails.as_view()), name="profile-details"),
     path('profile/', login_required(ProfileView.as_view()), name="profile"),
     path('register/', RegisterView.as_view(), name="register"),
-    path('', login_required(LandingView.as_view()), name="landing"),
+    path('', login_required(index), name="index"),
+    ##path('', login_required(LandingView.as_view()), name="landing"),
 ]

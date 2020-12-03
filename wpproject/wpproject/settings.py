@@ -128,3 +128,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "ecs639uprojectsuperuser@gmail.com"
 EMAIL_HOST_PASSWORD = "SuperPass1"
 EMAIL_USE_TLS = True
+
+# Media set up
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
