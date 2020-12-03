@@ -1,3 +1,4 @@
+{% load static %}<!DOCTYPE html>
 <html>
 <head>
     <!-- Required meta tags -->
@@ -27,7 +28,7 @@
     <div>
         {% if user.is_authenticated %}
             <a href="{% url 'index' %}">Landing</a>
-            <a href="{% url 'profile' %}">Profile</a>
+            <a href="/profile/{{ user.id }}">Profile</a>
             <a href=s"{% url 'logout' %}">Logout</a>
         {% endif %}
     </div>
@@ -38,6 +39,7 @@
             integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
             crossorigin="anonymous"
     ></script>
+    {% csrf_token %}
     {% block footerScritps %}
     {% endblock %}
     </body>
