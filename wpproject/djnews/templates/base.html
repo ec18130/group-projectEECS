@@ -1,0 +1,12 @@
+<h1>Welcome to DJNews</h1>
+
+{% block content %}
+{% endblock %}
+
+<div>
+    {% if user.is_authenticated %}
+        <a href="{% url 'index' %}">Landing</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% endif %}
+</div>

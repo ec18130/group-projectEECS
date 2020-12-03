@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+Hello, {{ user.username|default:'Guest' }}! This is your landing page.
+<div>
+    <h1>ARTICLES</h1>
+<form action="" method="GET">
+    <select id="category" name="category">
+        <option value="All">All</option>
+        {% for instance in test2 %}
+        <option value="{{ instance }}">{{ instance }}</option>
+        {% endfor %}
+        <input type="submit" value="Filter by">
+    </select>
+</form>
+
+{% for instance in test %}
+<ul>
+    <h3>{{ instance.title }}</h3>
+    <p>{{ instance.category }}</p>
+    <h3>{{ instance.date }}</h3>
+    <h3>{{ instance.author }}</h3>
+    <p>{{ instance.article }}</p>
+</ul>
+{% endfor %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</p>
+    <p>DOB: {{ profile.dob }}</p>
+    <a href="{% url 'profile-details' %}">Change profile details</a>
+    <a href="{% url 'password_change' %}">Change password</a>
+{% endblock %}
