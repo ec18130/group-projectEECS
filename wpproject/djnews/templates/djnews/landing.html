@@ -29,7 +29,7 @@
                     <h3>{{ instance.date }}</h3>
                     <h3>{{ instance.author }}</h3>
                     <p>{{ instance.article }}</p>
-                    <button class="add-comment-btn" onclick="generateNewCommentForm({{ instance.id }})">Add comment</button>
+                    <button class="add-comment-btn btn btn-dark" onclick="generateNewCommentForm({{ instance.id }})">Add comment</button>
                     <div title="{{ instance.id }}" class="comments-container"></div>
                 </li>
             {% endfor %}
@@ -37,5 +37,6 @@
     </div>
 {% endblock %}
 {% block footerScritps %}
+    <script> let user = {{ user.id }}</script>
     <script src="{% static 'djnews/js/landing.js' %}"></script>
 {% endblock %}

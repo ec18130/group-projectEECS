@@ -119,7 +119,8 @@ class CommentsView(View):
                     'dateUpdated': child_comment.dateUpdated,
                     'text': child_comment.text,
                     'parent': parent.id,
-                    'children': recursive_add_child_comment(child_comment, [])
+                    'children': recursive_add_child_comment(child_comment, []),
+                    'article': article.id,
                 })
             return child_comment_data
 
@@ -140,7 +141,8 @@ class CommentsView(View):
                     'dateUpdated': top_level_comment.dateUpdated,
                     'text': top_level_comment.text,
                     'parent': None,
-                    'children': recursive_add_child_comment(top_level_comment, [])
+                    'children': recursive_add_child_comment(top_level_comment, []),
+                    'article': article.id,
                 })
                 count += 1
 
@@ -157,18 +159,30 @@ class CommentsView(View):
             body = json.loads(request.body)
             comment = Comment(
                 author=request.user,
-                text=body.text,
-                article=article_id,
-                parent_id=body.parent
+                text=body.get('text'),
+                article=NewsArticle.objects.get(pk=article_id),
+                parent= Comment.objects.get(pk=body.get('parent')),
             )
             comment.save()
             return JsonResponse({"message": "Comment added"}, status=200)
         except TypeError as ex:
             print(ex)
             return JsonResponse({"message": "Comment not added"}, status=400)
-        # create comment object
-        # save object
-        # add relationships
+
+    @staticmethod
+    def delete(request, comment_id):
+        comment = get_object_or_404(Comment, pk=comment_id)
+        comment.delete()
+        return JsonResponse({"message": "comment deleted"})
+
+    @staticmethod
+    def put(request, comment_id):
+        comment = get_object_or_404(Comment, pk=comment_id)
+        body = json.loads(request.body)
+        comment.text = body.get('text')
+        comment.save()
+        return JsonResponse({"message": "comment edited"})
+
 
 
 # function to serialise user object
