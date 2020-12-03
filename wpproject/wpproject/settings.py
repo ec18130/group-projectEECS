@@ -24,7 +24,7 @@ SECRET_KEY = '(3bxa1sr#s@6x@f(wy(30fr*k%wax9y&p7a#q$!rvcj0ojt2+l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['apps.okd.eecs.qmul.ac.uk',]
 
 # Django user settings
 LOGIN_REDIRECT_URL = '/profile'
@@ -44,14 +44,20 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allow_cidr.middleware.AllowCIDRMiddleware',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+ALLOWED_CIDR_NETS = ['10.128.0.0/14']
+s
 ROOT_URLCONF = 'wpproject.urls'
 
 TEMPLATES = [
