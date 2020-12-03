@@ -57,7 +57,7 @@ MIDDLEWARE = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 ALLOWED_CIDR_NETS = ['10.128.0.0/14']
-s
+
 ROOT_URLCONF = 'wpproject.urls'
 
 TEMPLATES = [
