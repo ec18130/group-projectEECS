@@ -157,11 +157,15 @@ class CommentsView(View):
     def post(request, article_id):
         try:
             body = json.loads(request.body)
+            try:
+                parent = Comment.objects.get(pk=body.get('parent'))
+            except:
+                parent = None
             comment = Comment(
                 author=request.user,
                 text=body.get('text'),
                 article=NewsArticle.objects.get(pk=article_id),
-                parent= Comment.objects.get(pk=body.get('parent')),
+                parent= parent,
             )
             comment.save()
             return JsonResponse({"message": "Comment added"}, status=200)
