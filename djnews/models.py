@@ -18,6 +18,7 @@ class NewsArticle(models.Model):
     date = models.DateField(blank=False)
     author = models.CharField(max_length=124)
     article = models.TextField()
+    likes = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.title
