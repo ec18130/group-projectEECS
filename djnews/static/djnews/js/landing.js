@@ -2,8 +2,46 @@ const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value; //
 let contentToRender;
 $(document).ready(function () {
     populateComments();
+    populateLikes();
 });
 
+// Populates like likes button for each article on document ready
+async function populateLikes(){
+    let likeButtons = $('.like-button');
+    for (let i = 0; i < likeButtons.length; i++) {
+        await fetchLikes(likeButtons[i].name.match(/\d+/));
+    }
+}
+
+// fetches likes for a single article
+async function fetchLikes(articleId){
+    //Build request
+    const request = new Request(
+        "/likes/" + articleId + "/",
+
+        {
+            headers: {"X-CSRFToken": csrftoken},
+        }
+    );
+    // Fetch likes
+    fetch(request, {
+        method: "GET",
+        mode: "same-origin"
+    }).then(res => res.json().then(json => {
+        $('Button[name="like-button-'+articleId+'"').text('Likes: ' + json.likes);
+    }));
+}
+// populates the comments for each article
+async function populateComments() {
+    let commentsContainers = $('.comments-container');
+    for (let i = 0; i < commentsContainers.length; i++) {
+        $('.comments-container').children().remove();
+        await generateComments(commentsContainers[i]);
+    }
+}
+
+
+// Generates the HTML for each comments section
 async function generateComments(commentSection) {
     // Build request
     const request = new Request(
@@ -217,11 +255,22 @@ function cancelComment() {
     $("#newCommentForm").remove();
 }
 
-// populates the comments for each article
-async function populateComments() {
-    let commentsContainers = $('.comments-container');
-    for (let i = 0; i < commentsContainers.length; i++) {
-        $('.comments-container').children().remove();
-        await generateComments(commentsContainers[i]);
-    }
+// handles the click of the likes button
+async function handleLikesClick(articleId){
+    //construct request
+    const request = new Request(
+        "/likes/" + articleId + "/",
+
+        {
+            headers: {"X-CSRFToken": csrftoken},
+        }
+    )
+    // Fetch likes
+    fetch(request, {
+        method: "POST",
+        mode: "same-origin"
+    }).then(res => res.json().then(json => {
+        console.log(json.message);
+        fetchLikes(articleId)
+    }));
 }

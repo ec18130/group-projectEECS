@@ -29,6 +29,7 @@
                     <h3>{{ instance.date }}</h3>
                     <h3>{{ instance.author }}</h3>
                     <p>{{ instance.article }}</p>
+                    <button name="like-button-{{ instance.id }}"class="like-button btn btn-dark" onclick="handleLikesClick({{ instance.id }})">Like</button>
                     <button class="add-comment-btn btn btn-dark" onclick="generateNewCommentForm({{ instance.id }})">Add comment</button>
                     <div title="{{ instance.id }}" class="comments-container"></div>
                 </li>

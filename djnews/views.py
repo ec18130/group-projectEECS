@@ -62,7 +62,7 @@ class RegisterView(View):
             except SMTPException as e:
                 print('Error sending email')
             finally:
-                return redirect(reverse("landing"))
+                return redirect(reverse("index"))
         else:
             return render(request, 'djnews/register.html', {'form': form})
 
@@ -165,7 +165,7 @@ class CommentsView(View):
                 author=request.user,
                 text=body.get('text'),
                 article=NewsArticle.objects.get(pk=article_id),
-                parent= parent,
+                parent=parent,
             )
             comment.save()
             return JsonResponse({"message": "Comment added"}, status=200)
@@ -176,17 +176,49 @@ class CommentsView(View):
     @staticmethod
     def delete(request, comment_id):
         comment = get_object_or_404(Comment, pk=comment_id)
-        comment.delete()
-        return JsonResponse({"message": "comment deleted"})
+        if comment.author == request.user:
+            comment.delete()
+            return JsonResponse({"message": "comment deleted"})
+        else:
+            return JsonResponse({"message": "unauthorised"})
 
     @staticmethod
     def put(request, comment_id):
         comment = get_object_or_404(Comment, pk=comment_id)
-        body = json.loads(request.body)
-        comment.text = body.get('text')
-        comment.save()
-        return JsonResponse({"message": "comment edited"})
+        if comment.author == request.user:
+            body = json.loads(request.body)
+            comment.text = body.get('text')
+            comment.save()
+            return JsonResponse({"message": "comment edited"})
+        else:
+            return JsonResponse({"message": "unauthorised"})
 
+
+# Class view for the likes API functionality
+class LikesView(View):
+    @staticmethod
+    def get(request, article_id):
+        # gets likes count for an article
+        article = get_object_or_404(NewsArticle, pk=article_id)
+        return JsonResponse({"likes": article.likes.count()}, status=200)
+
+    @staticmethod
+    def post(request, article_id):
+        # removes or adds a likes relationship to an article depending
+        # on whether or not the user liked the article already
+        previously_liked = False
+        article = get_object_or_404(NewsArticle, pk=article_id)
+        article_likes = article.likes.all()
+        for like in article_likes:
+            if like == request.user:
+                previously_liked = True
+
+        if previously_liked:
+            article.likes.remove(request.user)
+            return JsonResponse({"message": "unliked"}, status=200)
+        else:
+            article.likes.add(request.user)
+            return JsonResponse({"message": "liked"}, status=200)
 
 
 # function to serialise user object
