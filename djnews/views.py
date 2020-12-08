@@ -1,6 +1,4 @@
-from collections import deque
-from datetime import datetime, date
-from queue import Queue
+from datetime import date
 from smtplib import SMTPException
 
 from django.contrib.auth import login
@@ -9,11 +7,35 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
-from django.views.generic import TemplateView
 import json
 
 from djnews.forms import CustomUserCreationForm, ProfileForm
 from djnews.models import Profile, NewsArticle, NewsCategory, Comment
+
+
+def get_articles(request):
+    articles = NewsArticle.objects.all()
+    return JsonResponse(serialise_articles(articles))
+
+
+def get_filtered_articles(request, article_filter):
+    articles = NewsArticle.objects.all()
+    article_filter = article_filter.lower()
+    if article_filter == "favourites":
+        p = Profile.objects.get(user=request.user)
+        favourites = p.favourite_categories.all()
+        categories = NewsCategory.objects.all()
+        for category in categories:
+            in_favourites = False
+            for favourite in favourites:
+                if category == favourite:
+                    in_favourites = True
+            if not in_favourites:
+                articles = articles.exclude(category=category)
+    else:
+        category = NewsCategory.objects.get(name__iexact=article_filter)
+        articles = articles.filter(category=category)
+    return JsonResponse(serialise_articles(articles))
 
 
 # Class for viewing profile page
@@ -25,13 +47,22 @@ class ProfileView(View):
         p = get_object_or_404(Profile, pk=profile_id)
         if date(1000, 1, 1) == p.dob:
             p.dob = None
-        context = {'user': request.user, 'profile': p}
+        context = {'user': request.user, 'profile': p, 'newsCategories': NewsCategory.objects.all(),
+                   'favouriteCategories': p.favourite_categories.all()}
         return render(request, "djnews/profile.html", context=context)
 
-
-# TODO: think this can be removed but cba to check rn
-class LandingView(TemplateView):
-    template_name = "djnews/landing.html"
+    @staticmethod
+    def post(request, profile_id):
+        # saves favourites
+        profile = get_object_or_404(Profile, pk=profile_id)
+        if profile.user == request.user:
+            favourite_categories = json.loads(request.body).get('favouriteCategories')
+            profile.favourite_categories.clear()
+            for category in favourite_categories:
+                profile.favourite_categories.add(NewsCategory.objects.get(name=category))
+            return JsonResponse({"message": "Favourites updated"})
+        else:
+            return JsonResponse({"message": "unauthorised"})
 
 
 # Class for handling registration page
@@ -227,3 +258,21 @@ def serialise_user(user):
         'id': user.id,
         'username': user.username
     }
+
+
+def serialise_articles(articles):
+    articles_serialised_data = []
+
+    for article in articles:
+        articles_serialised_data.append({
+            'id': article.id,
+            'title':article.title,
+            'category': article.category.name,
+            'date': article.date,
+            'author': article.author,
+            'article': article.article
+        })
+    data = {
+        'articles': articles_serialised_data
+    }
+    return data
