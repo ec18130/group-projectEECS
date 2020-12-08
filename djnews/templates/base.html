@@ -14,13 +14,38 @@
             integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
             crossorigin="anonymous"
     />
+    <title>DJ NEWS</title>
     {% block head %}
-        <title>DJ NEWS</title>
     {% endblock %}
 </head>
 {% autoescape on %}
-    <body>
-    <h1>Welcome to DJNews</h1>
+    <body class="bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <a class="navbar-brand text-light" href="/"><h1>DJNews</h1></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/profile/{{ user.id }}">Profile</a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Options
+                    </a>
+                    <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                        <a class="nav-link" href="{% url 'profile_details' %}">Change profile details</a>
+                        <a class="nav-link" href="/accounts/password_change/">Change password</a>
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     {% block content %}
     {% endblock %}
