@@ -1,9 +1,110 @@
 const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value; // get csrftoken from DOM
 let contentToRender;
+
+
 $(document).ready(function () {
-    populateComments();
+    populateInfo("favourites")
+        .then(res => finishedLoading());
 });
 
+async function populateInfo(filter) {
+    await populateArticles(filter);
+    await populateComments();
+    await populateLikes();
+}
+
+function finishedLoading() {
+    console.log("Finished Loading");
+}
+
+async function populateArticles(filter) {
+    let articleContainer = $('#article-container');
+    articleContainer.children().remove();
+    let request
+    let articleHTML ="";
+
+    if (filter == "all") {
+        //Build request
+        request = new Request(
+            "/articles/",
+            {
+                headers: {"X-CSRFToken": csrftoken},
+            }
+        );
+    } else {
+        //Build request
+        request = new Request(
+            "/articles/"+ filter +"/",
+            {
+                headers: {"X-CSRFToken": csrftoken},
+            }
+        );
+    }
+
+    // Fetch articles
+    await fetch(request, {
+        method: "GET",
+        mode: "same-origin"
+    }).then(res => res.json().then(json => {
+        articles = json.articles;
+        console.log(articles)
+        articleHTML += "<div class='list-group'>";
+        for(let i = 0; i<articles.length; i++){
+            articleHTML+="<div title='" + articles[i].id + "' class='article-list list-group-item bg-secondary text-light'>";
+            articleHTML+="<h2>"+articles[i].title + "</h2>";
+            articleHTML+="<h4>" + articles[i].category + "</h4>";
+            articleHTML+="<h5>Written by "  + articles[i].author + " on "  + articles[i].date + "</h5>";
+            articleHTML+="<p>" + articles[i].article + "</p>";
+            articleHTML+="<button name='like-button-" + articles[i].id + "' class='like-button btn bg-dark text-light' onclick='handleLikesClick(" + articles[i].id + ")'>Likes:</button>";
+            articleHTML+="<button class='add-comment-btn btn bg-dark bg-dark text-light' onclick='generateNewCommentForm(" + articles[i].id + ")'>Comment</button>";
+            articleHTML+="<div title='" + articles[i].id + "' class='comments-container'></div>";
+            articleHTML+="</div>";
+            articleHTML+="<p><br></p>"
+        }
+        articleHTML += "<div>";
+        articleContainer[0].innerHTML=articleHTML;
+    }));
+
+}
+
+// Populates like likes button for each article on document ready
+async function populateLikes() {
+    let likeButtons = $('.like-button');
+    for (let i = 0; i < likeButtons.length; i++) {
+        await fetchLikes(likeButtons[i].name.match(/\d+/));
+    }
+}
+
+// fetches likes for a single article
+async function fetchLikes(articleId) {
+    //Build request
+    const request = new Request(
+        "/likes/" + articleId + "/",
+
+        {
+            headers: {"X-CSRFToken": csrftoken},
+        }
+    );
+    // Fetch likes
+    fetch(request, {
+        method: "GET",
+        mode: "same-origin"
+    }).then(res => res.json().then(json => {
+        $('Button[name="like-button-' + articleId + '"').text('Likes: ' + json.likes);
+    }));
+}
+
+// populates the comments for each article
+async function populateComments() {
+    let commentsContainers = $('.comments-container');
+    for (let i = 0; i < commentsContainers.length; i++) {
+        $('.comments-container').children().remove();
+        await generateComments(commentsContainers[i]);
+    }
+}
+
+
+// Generates the HTML for each comments section
 async function generateComments(commentSection) {
     // Build request
     const request = new Request(
@@ -49,17 +150,16 @@ function generateCommentsChain(item) {
 function generateCommentHTML(comment) {
     let content = "<div class='comment'>"
     content += "<div class='comment-container' title='" + comment.id + "'>"
-    content += "<div class='comment-content'><span>" + comment.text + "</span></div><div>Author: " + comment.author.username + " | Date created: " + comment.dateCreated + "</div>"
+    content += "<p>" + comment.text + "</p>"
+    content+="<p>Author: <a href='/profile/" + comment.author.id + "/' class='text-info'>" + comment.author.username + "</a> | Date created: " + new Date(comment.dateCreated).toLocaleString() + "</p>"
     if (comment.dateCreated < comment.dateUpdated) {
-        content += "<div>Edited</div>"
+        content += "<p>Edited</p>"
     }
-    content += "<div>"
     content += "<button class='btn btn-dark' onclick='generateCommentReplyForm(" + comment.article + "," + comment.id + ")'>Reply</button>"
     if (user == comment.author.id) {
-        content += "<button class='btn btn-dark' onclick='deleteComment(" + comment.id + ")'>Delete Comment</button>"
-        content += "<button class='btn btn-dark' onClick='generateEditCommentForm(" + comment.id + ")'>Edit Comment</button>"
+        content += "<button class='btn bg-dark text-light' onclick='deleteComment(" + comment.id + ")'>Delete Comment</button>"
+        content += "<button class='btn bg-dark text-light' onClick='generateEditCommentForm(" + comment.id + ")'>Edit Comment</button>"
     }
-    content += "</div>"
     content += "</div>"
     content += "</div>"
     return content
@@ -217,11 +317,26 @@ function cancelComment() {
     $("#newCommentForm").remove();
 }
 
-// populates the comments for each article
-async function populateComments() {
-    let commentsContainers = $('.comments-container');
-    for (let i = 0; i < commentsContainers.length; i++) {
-        $('.comments-container').children().remove();
-        await generateComments(commentsContainers[i]);
-    }
+// handles the click of the likes button
+async function handleLikesClick(articleId) {
+    //construct request
+    const request = new Request(
+        "/likes/" + articleId + "/",
+
+        {
+            headers: {"X-CSRFToken": csrftoken},
+        }
+    )
+    // Fetch likes
+    fetch(request, {
+        method: "POST",
+        mode: "same-origin"
+    }).then(res => res.json().then(json => {
+        console.log(json.message);
+        fetchLikes(articleId)
+    }));
+}
+
+async function filterCategories(filter) {
+    await populateInfo(filter);
 }

@@ -18,6 +18,7 @@ class NewsArticle(models.Model):
     date = models.DateField(blank=False)
     author = models.CharField(max_length=124)
     article = models.TextField()
+    likes = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         return self.title
@@ -27,6 +28,7 @@ class NewsArticle(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     dob = models.DateField(default="1000-01-01")
+    favourite_categories = models.ManyToManyField(NewsCategory, blank=True)
 
     # image = models.ImageField(upload_to='images')
 

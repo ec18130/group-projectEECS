@@ -9,32 +9,49 @@
     />
 {% endblock %}
 {% block content %}
-    Hello, {{ user.username|default:'Guest' }}! This is your landing page.
-    <div>
-        <h1>ARTICLES</h1>
-        <form action="" method="GET">
-            <select id="category" name="category">
-                <option value="All">All</option>
-                {% for instance in categories %}
-                    <option value="{{ instance }}">{{ instance }}</option>
-                {% endfor %}
-                <input type="submit" value="Filter by">
-            </select>
-        </form>
-        <ul>
-            {% for instance in articles %}
-                <li name={{ instance.id }} class="article-list">
-                    <h3><a href="comments\{{ instance.id }}">{{ instance.title }}</a></h3>
-                    <p>{{ instance.category }}</p>
-                    <h3>{{ instance.date }}</h3>
-                    <h3>{{ instance.author }}</h3>
-                    <p>{{ instance.article }}</p>
-                    <button class="add-comment-btn btn btn-dark" onclick="generateNewCommentForm({{ instance.id }})">Add comment</button>
-                    <div title="{{ instance.id }}" class="comments-container"></div>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+        <div class="row category-selector-row">
+            <div class="col  mx-auto">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <button class="btn btn-dark" onclick="filterCategories('all')">All</button>
+                    <button class="btn btn-dark" onclick="filterCategories('favourites')">Favourites</button>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            {% for category in categories %}
+                                {% if forloop.counter0 < 5 %}
+                                    <button class="btn btn-dark"
+                                            onclick="filterCategories('{{ category.name }}')">{{ category.name }}</button>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% if categories.count > 0 %}
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown active">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        More Categories
+                                    </a>
+                                    <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                                        {% for category in categories %}
+                                            {% if forloop.counter0 > 0 %}
+                                                <button class="btn btn-dark"
+                                                        onclick="filterCategories('{{ category.name }}')">{{ category.name }}</button>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div id="article-container" class="bg-dark">
+        </div>
 {% endblock %}
 {% block footerScritps %}
     <script> let user = {{ user.id }}</script>

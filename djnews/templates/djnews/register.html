@@ -1,13 +1,50 @@
-{% extends 'base.html' %}
+{% extends 'registrationBase.html' %}
 
-{% block content %}
-<h2>Register</h2>
+{% block title %}
+    <h2>Register</h2>
+{% endblock %}
+{% block form %}
+    {% for non_field_error in form.non_field_errors %}
+        <p>{{ non_field_error }}</p>
+    {% endfor %}
+    {% for error in form.errors %}
+        {% if error == "password2" %}
+            <p>Your passwords didn't match.</p>
+        {% endif %}
+        {% if error == "username" %}
+            <p>This username is already taken.</p>
+        {% endif %}
+    {% endfor %}
 
-<form method="post">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit" value="Register">
-</form>
-
-<a href="{% url 'login' %}">Back to login</a>
+    <div class="form-group">
+        <label for="id_username">Username:</label>
+        <input type="text" class="form-control" name="username" autofocus="" autocapitalize="none"
+               autocomplete="username"
+               maxlength="150" required="" id="id_username" data-focused="true"
+               placeholder="Username"
+                {% if form.username.value != None %} value="{{ form.username.value |escape }}"{% endif %}
+               required>
+        <small id="usernameHelp" class="form-text text-muted">150 characters or fewer. Letters, digits and
+            @/./+/-/_ only.</small>
+    </div>
+    <div class="form-group">
+        <label for="id_email">Email address:</label>
+        <input type="email" class="form-control" name="email" maxlength="254" id="id_email"
+               {% if form.username.value != None %}value="{{ form.email.value|escape }}"{% endif %}
+               placeholder="Email"
+               required>
+    </div>
+    <div class="form-group">
+        <label for="id_password1">Password:</label>
+        <input type="password" class="form-control" name="password1" autocomplete="new-password"
+               id="id_password1" placeholder="Password" required>
+    </div>
+    <div class="form-group">
+        <label for="id_password2">Password confirmation:</label>
+        <input type="password" class="form-control" name="password2" autocomplete="new-password"
+               id="id_password2" placeholder="Password confirmation" required>
+        <small id="passwordHelp" class="form-text text-muted">Please enter the same password, for
+            verification.</small>
+    </div>
+    <input class="btn btn-secondary btn-block" type="submit" value="Register">
 {% endblock %}
