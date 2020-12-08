@@ -3,22 +3,25 @@
 
 {% block content %}
     {% if user.id == profile.user.id %}
-    <p>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</p>
-    <p>DOB: {{ profile.dob }}</p>
-        <form id="favourite-category-form">
-            <ul class="list-group">
+        <h3>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</h3>
+        <h5>DOB: {{ profile.dob }}</h5>
+        <form id="favourite-category-form bg-secondary text-light">
+            <h5>Favourite categories:</h5>
+            <ul class="list-group bg-secondary text-light">
                 {% for newsCategory in newsCategories %}
-                    <li class="list-group-item"><input type="checkbox" name="favourite-news-categories"
-                                                       value="{{ newsCategory.name }}"
-                                                       class="favourite-category-checkbox"> {{ newsCategory.name }}</li>
+                    <li class="list-group-item bg-secondary text-light"><input type="checkbox"
+                                                                               name="favourite-news-categories"
+                                                                               value="{{ newsCategory.name }}"
+                                                                               class="favourite-category-checkbox"> {{ newsCategory.name }}
+                    </li>
                 {% endfor %}
             </ul>
             <button type="submit" class="btn btn-dark" onclick="saveFavourites()">Save favourites</button>
             <p id="favourites-updated-text"></p>
         </form>
-        {% else %}
-        <p>Hello, {{ user.username|default:'Guest' }}! This is {{ profile.user.username }}'s profile page.</p>
-        <p>DOB: {{ profile.dob }}</p>
+    {% else %}
+        <h3>Hello, {{ user.username|default:'Guest' }}! This is {{ profile.user.username }}'s profile page.</h3>
+        <h5>DOB: {{ profile.dob }}</h5>
     {% endif %}
 {% endblock %}
 
