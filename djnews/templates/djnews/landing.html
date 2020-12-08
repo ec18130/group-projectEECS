@@ -9,13 +9,7 @@
     />
 {% endblock %}
 {% block content %}
-    Hello, {{ user.username|default:'Guest' }}! This is your landing page.
     <div class="articles-container container-fluid">
-        <div class="row">
-            <div class="col">
-                <h1 class="text-center">ARTICLES</h1>
-            </div>
-        </div>
         <div class="row category-selector-row">
             <div class="col  mx-auto">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -37,7 +31,7 @@
                         </ul>
                         {% if categories.count > 0 %}
                             <ul class="navbar-nav">
-                                <li class="nav-item dropdown ">
+                                <li class="nav-item dropdown active">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         More Categories
@@ -57,7 +51,7 @@
                 </nav>
             </div>
         </div>
-        <div id="article-container">
+        <div id="article-container" class="bg-dark">
         </div>
     </div>
 {% endblock %}
