@@ -1,13 +1,22 @@
-{% block content %}
-<h2>Login</h2>
+{% extends 'registrationBase.html' %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Login">
-</form>
-
-<a href="{% url 'password_reset' %}">Reset password</a>
-<a href="{% url 'register' %}">Register</a>
-
+{% block title %}
+    <h2>Login</h2>
+{% endblock %}
+{% block form %}
+    <div class="form-group">
+        <label for="id_username">Username:</label>
+        <input type="text" class="form-control" name="username" autofocus="" autocapitalize="none"
+               autocomplete="username"
+               maxlength="150" required="" id="id_username" data-focused="true"
+               placeholder="Username"
+                {% if form.username.value != None %} value="{{ form.username.value|escape }}"{% endif %}
+               required>
+    </div>
+    <div class="form-group">
+        <label for="id_password">Password:</label>
+        <input type="password" class="form-control" name="password" autocomplete="current-password"
+               id="id_password" data-focused="true" placeholder="Password" required>
+    </div>
+    <input class="btn btn-secondary btn-block" type="submit" value="Login">
 {% endblock %}

@@ -60,7 +60,6 @@ async function populateArticles(filter) {
             articleHTML+="<div title='" + articles[i].id + "' class='comments-container'></div>";
             articleHTML+="</div>";
             articleHTML+="<p><br></p>"
-
         }
         articleHTML += "<div>";
         articleContainer[0].innerHTML=articleHTML;
