@@ -74,7 +74,6 @@ class RegisterView(View):
             {"form": CustomUserCreationForm}
         )
 
-    # TODO: prevent users with the same email
     @staticmethod
     def post(request):
         form = CustomUserCreationForm(request.POST)

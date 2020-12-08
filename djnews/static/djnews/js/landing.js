@@ -48,6 +48,20 @@ async function populateArticles(filter) {
     }).then(res => res.json().then(json => {
         articles = json.articles;
         console.log(articles)
+        articleHTML += "<div class='row d-flex flex-column align-content-center'>"
+        articleHTML += "<h3>" + filter.toUpperCase() + "</h3>";
+        articleHTML += "</div>";
+        articleHTML += "<div class='row d-flex flex-column align-content-center'>"
+        if(articles.length == 0){
+            if(filter=="favourites") {
+                articleHTML += "<h3> There is no news in your favourite categories, add some more categories in your profile page!</h3>";
+            }
+             else {
+                articleHTML+="<h3> No news in this category.</h3>";
+            }
+        }
+        articleHTML += "</div>";
+        articleHTML += "</div>";
         articleHTML += "<div class='list-group'>";
         for(let i = 0; i<articles.length; i++){
             articleHTML+="<div title='" + articles[i].id + "' class='article-list list-group-item bg-secondary text-light'>";
@@ -189,10 +203,7 @@ function generateCommentForm(article, parent) {
     $form.append(
         "<div class='form-group form-btns'><button name='add' class='btn btn-dark' onclick='addComment(" + article + "," + parent + ")'>Add</button><button name='cancel' class='btn btn-dark' onclick='cancelComment()'>Cancel</button></div>"
     );
-    $form.submit(function (e) {
-        // prevent form default action
-        return false;
-    });
+    $form.submit(false);
     return $form;
 }
 
