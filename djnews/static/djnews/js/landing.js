@@ -1,12 +1,74 @@
 const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value; // get csrftoken from DOM
 let contentToRender;
+
+
 $(document).ready(function () {
-    populateComments();
-    populateLikes();
+    populateInfo("favourites")
+        .then(res => finishedLoading());
 });
 
+async function populateInfo(filter) {
+    await populateArticles(filter);
+    await populateComments();
+    await populateLikes();
+}
+
+function finishedLoading() {
+    console.log("Finished Loading");
+}
+
+async function populateArticles(filter) {
+    let articleContainer = $('#article-container');
+    articleContainer.children().remove();
+    let request
+    let articleHTML ="";
+
+    if (filter == "all") {
+        //Build request
+        request = new Request(
+            "/articles/",
+            {
+                headers: {"X-CSRFToken": csrftoken},
+            }
+        );
+    } else {
+        //Build request
+        request = new Request(
+            "/articles/"+ filter +"/",
+            {
+                headers: {"X-CSRFToken": csrftoken},
+            }
+        );
+    }
+
+    // Fetch articles
+    await fetch(request, {
+        method: "GET",
+        mode: "same-origin"
+    }).then(res => res.json().then(json => {
+        articles = json.articles;
+        console.log(articles)
+        articleHTML += "<ul class='list-group'>";
+        for(let i = 0; i<articles.length; i++){
+            articleHTML+="<li name='" + articles[i].id + "' class='article-list list-group-item'>";
+            articleHTML+="<h3>"+articles[i].title + "</h3>";
+            articleHTML+="<p>" + articles[i].category + "</p>";
+            articleHTML+="<h3>" + articles[i].date + "</h3>";
+            articleHTML+="<h3>" + articles[i].author + "</h3>";
+            articleHTML+="<p>" + articles[i].article + "</p>";
+            articleHTML+="<button name='like-button-" + articles[i].id + "' class='like-button btn btn-dark' onclick='handleLikesClick(" + articles[i].id + ")'>Likes:</button>";
+            articleHTML+="<button class='add-comment-btn btn btn-dark' onclick='generateNewCommentForm(" + articles[i].id + ")'>Comment</button>";
+            articleHTML+="<div title='" + articles[i].id + "' class='comments-container'></div>";
+            articleHTML+="</li>";
+        }
+        articleHTML += "<ul>";
+        articleContainer[0].innerHTML=articleHTML;
+    }));
+
+}
+
 // Populates like likes button for each article on document ready
-async function populateLikes(){
+async function populateLikes() {
     let likeButtons = $('.like-button');
     for (let i = 0; i < likeButtons.length; i++) {
         await fetchLikes(likeButtons[i].name.match(/\d+/));
@@ -14,7 +76,7 @@ async function populateLikes(){
 }
 
 // fetches likes for a single article
-async function fetchLikes(articleId){
+async function fetchLikes(articleId) {
     //Build request
     const request = new Request(
         "/likes/" + articleId + "/",
@@ -28,9 +90,10 @@ async function fetchLikes(articleId){
         method: "GET",
         mode: "same-origin"
     }).then(res => res.json().then(json => {
-        $('Button[name="like-button-'+articleId+'"').text('Likes: ' + json.likes);
+        $('Button[name="like-button-' + articleId + '"').text('Likes: ' + json.likes);
     }));
 }
+
 // populates the comments for each article
 async function populateComments() {
     let commentsContainers = $('.comments-container');
@@ -256,7 +319,7 @@ function cancelComment() {
 }
 
 // handles the click of the likes button
-async function handleLikesClick(articleId){
+async function handleLikesClick(articleId) {
     //construct request
     const request = new Request(
         "/likes/" + articleId + "/",
@@ -273,4 +336,8 @@ async function handleLikesClick(articleId){
         console.log(json.message);
         fetchLikes(articleId)
     }));
+}
+
+async function filterCategories(filter) {
+    await populateInfo(filter);
 }
