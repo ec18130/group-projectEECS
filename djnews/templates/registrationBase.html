@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <br>
+        <br>
+        <div class="row d-flex flex-column align-content-center">
+            <h2>You cannot access this page while logged in.</h2>
+        </div>
+    {% else %}
+        <div class="row d-flex flex-column align-content-center">
+        <h1>DJNews</h1>
+        </div>
+        <br>
+        <br>
+        <div class="row d-flex flex-column align-content-center">
+            {% block title %}
+            {% endblock %}
+            <form method="post">
+                {% csrf_token %}
+                {% block form %}
+                {% endblock %}
+            </form>
+            <div class="row d-flex flex-row justify-content-center">
+                <p>
+                    <a class="text-info" href="{% url 'login' %}">Login</a>
+                    |
+                    <a class="text-info" href="{% url 'register' %}">Register</a>
+                    |
+                    <a class="text-info" href="{% url 'password_reset' %}">Reset password</a>
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

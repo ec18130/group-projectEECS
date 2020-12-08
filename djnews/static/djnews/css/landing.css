@@ -1,5 +1,4 @@
 .comment{
-    width: auto;
     padding: 0.2em;
 }
 .comment-level-container{
@@ -7,3 +6,8 @@
     left: 1em;
     border-left: 0.1em solid black;
 }
+
+.comment-content{
+    width: auto;
+}
+
