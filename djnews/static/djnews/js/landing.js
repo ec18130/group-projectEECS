@@ -48,20 +48,21 @@ async function populateArticles(filter) {
     }).then(res => res.json().then(json => {
         articles = json.articles;
         console.log(articles)
-        articleHTML += "<ul class='list-group'>";
+        articleHTML += "<div class='list-group'>";
         for(let i = 0; i<articles.length; i++){
-            articleHTML+="<li name='" + articles[i].id + "' class='article-list list-group-item'>";
-            articleHTML+="<h3>"+articles[i].title + "</h3>";
-            articleHTML+="<p>" + articles[i].category + "</p>";
-            articleHTML+="<h3>" + articles[i].date + "</h3>";
-            articleHTML+="<h3>" + articles[i].author + "</h3>";
+            articleHTML+="<div title='" + articles[i].id + "' class='article-list list-group-item bg-secondary text-light'>";
+            articleHTML+="<h2>"+articles[i].title + "</h2>";
+            articleHTML+="<h4>" + articles[i].category + "</h4>";
+            articleHTML+="<h5>Written by "  + articles[i].author + " on "  + articles[i].date + "</h5>";
             articleHTML+="<p>" + articles[i].article + "</p>";
-            articleHTML+="<button name='like-button-" + articles[i].id + "' class='like-button btn btn-dark' onclick='handleLikesClick(" + articles[i].id + ")'>Likes:</button>";
-            articleHTML+="<button class='add-comment-btn btn btn-dark' onclick='generateNewCommentForm(" + articles[i].id + ")'>Comment</button>";
+            articleHTML+="<button name='like-button-" + articles[i].id + "' class='like-button btn bg-dark text-light' onclick='handleLikesClick(" + articles[i].id + ")'>Likes:</button>";
+            articleHTML+="<button class='add-comment-btn btn bg-dark bg-dark text-light' onclick='generateNewCommentForm(" + articles[i].id + ")'>Comment</button>";
             articleHTML+="<div title='" + articles[i].id + "' class='comments-container'></div>";
-            articleHTML+="</li>";
+            articleHTML+="</div>";
+            articleHTML+="<p><br></p>"
+
         }
-        articleHTML += "<ul>";
+        articleHTML += "<div>";
         articleContainer[0].innerHTML=articleHTML;
     }));
 
@@ -150,17 +151,16 @@ function generateCommentsChain(item) {
 function generateCommentHTML(comment) {
     let content = "<div class='comment'>"
     content += "<div class='comment-container' title='" + comment.id + "'>"
-    content += "<div class='comment-content'><span>" + comment.text + "</span></div><div>Author: " + comment.author.username + " | Date created: " + comment.dateCreated + "</div>"
+    content += "<p>" + comment.text + "</p>"
+    content+="<p>Author: <a href='/profile/" + comment.author.id + "/' class='text-info'>" + comment.author.username + "</a> | Date created: " + new Date(comment.dateCreated).toLocaleString() + "</p>"
     if (comment.dateCreated < comment.dateUpdated) {
-        content += "<div>Edited</div>"
+        content += "<p>Edited</p>"
     }
-    content += "<div>"
     content += "<button class='btn btn-dark' onclick='generateCommentReplyForm(" + comment.article + "," + comment.id + ")'>Reply</button>"
     if (user == comment.author.id) {
-        content += "<button class='btn btn-dark' onclick='deleteComment(" + comment.id + ")'>Delete Comment</button>"
-        content += "<button class='btn btn-dark' onClick='generateEditCommentForm(" + comment.id + ")'>Edit Comment</button>"
+        content += "<button class='btn bg-dark text-light' onclick='deleteComment(" + comment.id + ")'>Delete Comment</button>"
+        content += "<button class='btn bg-dark text-light' onClick='generateEditCommentForm(" + comment.id + ")'>Edit Comment</button>"
     }
-    content += "</div>"
     content += "</div>"
     content += "</div>"
     return content
