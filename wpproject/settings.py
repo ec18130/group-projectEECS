@@ -31,7 +31,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Application definition
 
-ALLOWED_HOSTS = ['apps.okd.eecs.qmul.ac.uk',]
+ALLOWED_HOSTS = ['.apps.okd.eecs.qmul.ac.uk',]
 
 INSTALLED_APPS = [
     'djnews',
