@@ -24,8 +24,6 @@ SECRET_KEY = '(3bxa1sr#s@6x@f(wy(30fr*k%wax9y&p7a#q$!rvcj0ojt2+l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.apps.okd.eecs.qmul.ac.uk',
-                 ]
 
 # Django user settings
 LOGIN_REDIRECT_URL = '/profile'
@@ -56,8 +54,6 @@ MIDDLEWARE = [
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
-ALLOWED_CIDR_NETS = ['10.128.0.0/14']
 
 ROOT_URLCONF = 'wpproject.urls'
 
