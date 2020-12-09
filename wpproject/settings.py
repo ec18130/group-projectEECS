@@ -31,6 +31,8 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Application definition
 
+ALLOWED_HOSTS = ['10.130.7.225:8080',]
+
 INSTALLED_APPS = [
     'djnews',
     'django.contrib.admin',
