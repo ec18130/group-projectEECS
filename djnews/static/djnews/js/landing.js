@@ -47,8 +47,19 @@ async function populateArticles(filter) {
         mode: "same-origin"
     }).then(res => res.json().then(json => {
         articles = json.articles;
-        console.log(articles)
         articleHTML += "<div class='list-group'>";
+        articleHTML+="<div class='row d-flex flex-column align-content-center'>";
+        articleHTML+="<h3>"+filter.toUpperCase()+"</h3>"
+        articleHTML+="</div>"
+        if(articles.length<1){
+            articleHTML+="<div class='row d-flex flex-column align-content-center'>";
+                if(filter=="favourites"){
+                    articleHTML+="<h3>No news in your favourite categories, add more in your profile page.</h3>";
+                } else{
+                    articleHTML+="<h3>No news in this category.</h3>";
+                }
+            articleHTML+="</div>"
+        }
         for(let i = 0; i<articles.length; i++){
             articleHTML+="<div title='" + articles[i].id + "' class='article-list list-group-item bg-secondary text-light'>";
             articleHTML+="<h2>"+articles[i].title + "</h2>";
