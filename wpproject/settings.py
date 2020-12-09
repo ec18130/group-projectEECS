@@ -31,7 +31,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Application definition
 
-ALLOWED_HOSTS = ['10.130.7.225',]
+ALLOWED_HOSTS = ['apps.okd.eecs.qmul.ac.uk',]
 
 INSTALLED_APPS = [
     'djnews',
@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-ALLOWED_CIDR_NETS = ['10.130.7.0/24']
+ALLOWED_CIDR_NETS = ['10.128.0.0/14']
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
