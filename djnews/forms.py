@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from .models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -18,7 +19,16 @@ class CustomUserCreationForm(UserCreationForm):
         return self.cleaned_data
 
 
-class ProfileForm(forms.Form):
-    cur_year = datetime.today().year
-    year_range = tuple([i for i in range(cur_year - 100, cur_year + 1)])
-    dob = forms.DateField(label='Date of Birth', widget=forms.SelectDateWidget(years=year_range))
+class ProfileForm(forms.ModelForm):
+     class Meta:
+        model = Profile
+        fields = ['dob', 'image']
+        forms.DateInput.input_type='date'
+        widgets={
+            'dob' : forms.DateInput(attrs={'class' : 'form-control', 'name' : 'dob', 'id' : 'dob', 'value' : '{{ user_id.dob }}'}),
+            'image': forms.FileInput(attrs={'class' : 'form-control', 'name' : 'image', 'id' : 'image', 'label': 'Update your profile photo'}),
+        }
+        labels = {
+        'dob': "Date of Birth",
+        'image' : "Import Profile Image"
+    }

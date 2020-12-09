@@ -10,8 +10,9 @@ urlpatterns = [
     path('comments/<int:article_id>/', login_required(CommentsView.as_view()), name="comments"),
     path('comments/edit/<int:comment_id>/', login_required(CommentsView.as_view()), name="comments"),
     path('accounts/', include("django.contrib.auth.urls")),
-    path('profile/details/', login_required(GetProfileDetails.as_view()), name="profile_details"),
-    path('profile/<int:profile_id>/', login_required(ProfileView.as_view()), name="profile"),
+    path('profile/', login_required(ProfileView.as_view()), name="profile"),
+    path('profile/details/<str:username>/', login_required(GetProfileDetails.as_view()), name="profile_details"),
+    path('profile/<str:username>/', login_required(delete_image), name="delete_Image"),
     path('register/', RegisterView.as_view(), name="register"),
     path('', login_required(index), name="index"),
 ]

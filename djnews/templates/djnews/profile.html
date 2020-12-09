@@ -5,6 +5,21 @@
     {% if user.id == profile.user.id %}
         <h3>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</h3>
         <h5>DOB: {{ profile.dob }}</h5>
+        <div id="profilepic">
+            <div>
+                {% if profile.image %}
+                    <img src="{{ profile.image.url }}" width="350px" height="300px">
+                {% else %}
+                    <img src="{% static 'djnews/default/default.png' %}" width="350px" height="300px">
+                {% endif %}
+            </div>
+            <form action="{% url 'delete_Image' profile.user_id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger deleteButton" type="submit">Delete Image</button>
+            </form>
+            <a class="nav-link btn btn-secondary btn-lg" href="{% url 'profile_details' profile.user_id %}">Change profile details</a>
+            <a class="nav-link btn btn-secondary btn-lg" href="{% url 'password_change' %}">Change password</a>
+        </div>
         <form id="favourite-category-form">
             <h5>Favourite categories:</h5>
             <ul class="list-group bg-secondary text-light">

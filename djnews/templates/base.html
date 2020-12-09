@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/profile/{{ user.id }}">Profile</a>
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
                     </li>
                     <li class="nav-item dropdown active">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -39,8 +39,6 @@
                             Options
                         </a>
                         <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                            <a class="nav-link" href="{% url 'profile_details' %}">Change profile details</a>
-                            <a class="nav-link" href="/accounts/password_change/">Change password</a>
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                         </div>
                     </li>
