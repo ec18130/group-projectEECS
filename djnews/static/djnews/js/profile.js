@@ -2,6 +2,10 @@ const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]").value; //
 
 
 $(document).ready(function () {
+    let $form = ($("#favourite-category-form"));
+    $form.submit(function (e){
+        return false;
+    });
     let favouriteCategoryCheckboxes = $('.favourite-category-checkbox')
     for (let i = 0; i < favouriteCategoryCheckboxes.length; i++){
         favouriteCategoryCheckboxes[i].checked=false;
@@ -13,11 +17,6 @@ $(document).ready(function () {
             }
         }
     }
-    ($("#favourite-category-form")).submit(function (e) {
-        // prevent form default action
-        return false;
-    });
-
 });
 
 function saveFavourites(){
