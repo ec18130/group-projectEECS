@@ -31,7 +31,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Application definition
 
-ALLOWED_HOSTS = ['10.130.7.225:8080',]
+ALLOWED_HOSTS = ['10.130.7.225',]
 
 INSTALLED_APPS = [
     'djnews',
