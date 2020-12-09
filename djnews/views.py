@@ -13,6 +13,25 @@ from djnews.forms import CustomUserCreationForm, ProfileForm
 from djnews.models import Profile, NewsArticle, NewsCategory, Comment
 
 
+# Class for handling editing profile details
+class GetProfileDetails(View):
+    @staticmethod
+    def get(request):
+        form1 = ProfileForm()
+        return render(request, 'djnews/profile_form.html', {'form1': form1})
+
+    @staticmethod
+    def post(request):
+        form1 = ProfileForm(request.POST, request.FILES)
+        if form1.is_valid():
+            profile = Profile.objects.get(user=request.user)
+            profile.dob = form1.cleaned_data.get("dob")
+            profile.profile_picture = form1.cleaned_data.get("profile_picture")
+            profile.save()
+            return redirect('/profile/' + str(profile.user.id) + '/')
+        return render(request, 'djnews/profile_form.html', {'form1': form1})
+
+
 def get_articles(request):
     articles = NewsArticle.objects.all()
     return JsonResponse(serialise_articles(articles))
@@ -48,7 +67,7 @@ class ProfileView(View):
         if date(1000, 1, 1) == p.dob:
             p.dob = None
         context = {'user': request.user, 'profile': p, 'newsCategories': NewsCategory.objects.all(),
-                   'favouriteCategories': p.favourite_categories.all()}
+                   'favouriteCategories': p.favourite_categories.all(), 'profile_picture': p.profile_picture}
         return render(request, "djnews/profile.html", context=context)
 
     @staticmethod
@@ -74,7 +93,6 @@ class RegisterView(View):
             {"form": CustomUserCreationForm}
         )
 
-    # TODO: prevent users with the same email
     @staticmethod
     def post(request):
         form = CustomUserCreationForm(request.POST)
@@ -96,24 +114,6 @@ class RegisterView(View):
                 return redirect(reverse("index"))
         else:
             return render(request, 'djnews/register.html', {'form': form})
-
-
-# Class for handling editing profile details
-class GetProfileDetails(View):
-    @staticmethod
-    def get(request):
-        form = ProfileForm()
-        return render(request, 'djnews/profile_form.html', {'form': form})
-
-    @staticmethod
-    def post(request):
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-            profile = Profile.objects.get(user=request.user)
-            profile.dob = form.cleaned_data.get("dob")
-            profile.save()
-            return redirect('profile')
-        return render(request, 'djnews/profile_form.html', {'form': form})
 
 
 # Landing page function
@@ -266,7 +266,7 @@ def serialise_articles(articles):
     for article in articles:
         articles_serialised_data.append({
             'id': article.id,
-            'title':article.title,
+            'title': article.title,
             'category': article.category.name,
             'date': article.date,
             'author': article.author,

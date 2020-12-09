@@ -5,6 +5,7 @@
     {% if user.id == profile.user.id %}
         <h3>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</h3>
         <h5>DOB: {{ profile.dob }}</h5>
+        <img src="/media/{{ profile_picture }}" alt="No Profile Picture" style="max-height:400px; max-width:400px">
         <form id="favourite-category-form">
             <h5>Favourite categories:</h5>
             <ul class="list-group bg-secondary text-light">
@@ -22,6 +23,7 @@
     {% else %}
         <h3>Hello, {{ user.username|default:'Guest' }}! This is {{ profile.user.username }}'s profile page.</h3>
         <h5>DOB: {{ profile.dob }}</h5>
+        <img src="/media/{{ profile_picture }}" alt="No Profile Picture" style="max-height:400px; max-width:400px">
     {% endif %}
 {% endblock %}
 

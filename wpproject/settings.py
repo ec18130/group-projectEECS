@@ -24,6 +24,7 @@ SECRET_KEY = '(3bxa1sr#s@6x@f(wy(30fr*k%wax9y&p7a#q$!rvcj0ojt2+l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Django user settings
 LOGIN_REDIRECT_URL = '/profile'
@@ -31,11 +32,10 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Application definition
 
-ALLOWED_HOSTS = ['.apps.okd.eecs.qmul.ac.uk',]
+ALLOWED_HOSTS = ['.apps.okd.eecs.qmul.ac.uk','127.0.0.1']
 
 INSTALLED_APPS = [
-    'djnews',
-    'django.contrib.admin',
+    'djnews',    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # },
 ]
 
-ALLOWED_CIDR_NETS = ['10.128.0.0/14']
+ALLOWED_CIDR_NETS = ['10.128.0.0/14','127.0.0.1']
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

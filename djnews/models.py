@@ -29,13 +29,18 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     dob = models.DateField(default="1000-01-01")
     favourite_categories = models.ManyToManyField(NewsCategory, blank=True)
-
-    # image = models.ImageField(upload_to='images')
+    profile_picture = models.ImageField(upload_to='images', blank=True, null=True)
 
     def __str__(self):
         string = 'user: ' + str(self.user) + '\n'
         string += 'dob: ' + str(self.dob) + '\n'
         return string
+
+
+# Profile picture model
+class ProfilePicture(models.Model):
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE, primary_key=True)
+    image = models.ImageField(upload_to='images')
 
 
 class Comment(models.Model):
