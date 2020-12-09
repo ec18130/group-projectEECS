@@ -30,7 +30,11 @@ class Profile(models.Model):
     dob = models.DateField(default="1000-01-01")
     favourite_categories = models.ManyToManyField(NewsCategory, blank=True)
 
-    # image = models.ImageField(upload_to='images')
+    image = models.ImageField(null=True, blank=True)
+
+    def delete(self, *args, **kwargs):
+        self.image.delete()
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         string = 'user: ' + str(self.user) + '\n'

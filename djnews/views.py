@@ -43,8 +43,8 @@ class ProfileView(View):
     template_name = "djnews/profile.html"
 
     @staticmethod
-    def get(request, profile_id):
-        p = get_object_or_404(Profile, pk=profile_id)
+    def get(request):
+        p = Profile.objects.get(user=request.user)
         if date(1000, 1, 1) == p.dob:
             p.dob = None
         context = {'user': request.user, 'profile': p, 'newsCategories': NewsCategory.objects.all(),
@@ -52,9 +52,9 @@ class ProfileView(View):
         return render(request, "djnews/profile.html", context=context)
 
     @staticmethod
-    def post(request, profile_id):
+    def post(request):
         # saves favourites
-        profile = get_object_or_404(Profile, pk=profile_id)
+        profile = Profile.objects.get(user=request.user)
         if profile.user == request.user:
             favourite_categories = json.loads(request.body).get('favouriteCategories')
             profile.favourite_categories.clear()
@@ -64,6 +64,11 @@ class ProfileView(View):
         else:
             return JsonResponse({"message": "unauthorised"})
 
+def delete_image(request, username):
+    if request.method == "POST":
+        p = Profile.objects.get(user_id=username)
+        p.image.delete()
+    return redirect('profile')
 
 # Class for handling registration page
 class RegisterView(View):
@@ -74,7 +79,6 @@ class RegisterView(View):
             {"form": CustomUserCreationForm}
         )
 
-    # TODO: prevent users with the same email
     @staticmethod
     def post(request):
         form = CustomUserCreationForm(request.POST)
@@ -101,19 +105,21 @@ class RegisterView(View):
 # Class for handling editing profile details
 class GetProfileDetails(View):
     @staticmethod
-    def get(request):
+    def get(request, username):
+        profile = Profile.objects.get(user_id=username)
         form = ProfileForm()
-        return render(request, 'djnews/profile_form.html', {'form': form})
+        return render(request, 'djnews/profile_form.html', {'form': form, 'profile': profile})
 
     @staticmethod
-    def post(request):
-        form = ProfileForm(request.POST)
+    def post(request, username):
+        form = ProfileForm(request.POST, request.FILES)
         if form.is_valid():
-            profile = Profile.objects.get(user=request.user)
+            profile = Profile.objects.get(user_id=username)
             profile.dob = form.cleaned_data.get("dob")
+            profile.image = form.cleaned_data.get("image")
             profile.save()
             return redirect('profile')
-        return render(request, 'djnews/profile_form.html', {'form': form})
+        return render(request, 'djnews/profile_form.html', {'form': form , 'profile': profile})
 
 
 # Landing page function
