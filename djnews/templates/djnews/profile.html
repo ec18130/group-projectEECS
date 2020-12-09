@@ -5,7 +5,7 @@
     {% if user.id == profile.user.id %}
         <h3>Hello, {{ user.username|default:'Guest' }}! This is your profile page.</h3>
         <h5>DOB: {{ profile.dob }}</h5>
-        <form id="favourite-category-form bg-secondary text-light">
+        <form id="favourite-category-form">
             <h5>Favourite categories:</h5>
             <ul class="list-group bg-secondary text-light">
                 {% for newsCategory in newsCategories %}
@@ -16,7 +16,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <button type="submit" class="btn btn-dark" onclick="saveFavourites()">Save favourites</button>
+            <button class="btn btn-dark" onclick="saveFavourites()">Save favourites</button>
             <p id="favourites-updated-text"></p>
         </form>
     {% else %}
